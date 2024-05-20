@@ -1,7 +1,12 @@
 package logger
 
-import "go.uber.org/zap"
+import (
+	"go.uber.org/zap"
+)
 
-func NewZapLog() *zap.Logger {
-	return zap.Must(zap.NewDevelopment())
+func NewZapLog(debug bool) *zap.Logger {
+	if debug {
+		return zap.Must(zap.NewDevelopment())
+	}
+	return zap.Must(zap.NewProduction())
 }

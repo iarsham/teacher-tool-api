@@ -23,10 +23,11 @@ type Postgres struct {
 }
 
 type App struct {
-	Host  string
-	Port  int
-	Addr  string
-	Debug bool
+	Host    string
+	Port    int
+	Addr    string
+	Debug   bool
+	BaseAPI string
 }
 
 type Config struct {

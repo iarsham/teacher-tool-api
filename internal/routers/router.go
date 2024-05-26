@@ -10,10 +10,8 @@ import (
 	"net/http"
 )
 
-const BasePathV1 string = "/api/v1"
-
 func Routes(db *sql.DB, logger *zap.Logger, cfg *configs.Config) http.Handler {
-	mux := multiplexer.New(http.NewServeMux(), BasePathV1)
+	mux := multiplexer.New(http.NewServeMux(), cfg.App.BaseAPI)
 	mux.NotFound = http.HandlerFunc(handlers.NotFoundHandler)
 	mux.MethodNotAllowed = http.HandlerFunc(handlers.HttpMethodHandler)
 	dynamic := multiplexer.NewChain(

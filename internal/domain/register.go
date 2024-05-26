@@ -5,9 +5,8 @@ import (
 	"github.com/iarsham/teacher-tool-api/internal/models"
 )
 
-type AuthUsecase interface {
+type RegisterUsecase interface {
 	FindByPhone(phone string) (*models.Users, error)
 	Create(user *entities.UserRequest) (*models.Users, error)
-	EncryptPass(password string) (string, error)
-	VerifyPass(hash, plain string) bool
+	EncryptPass(password string) ([]byte, error)
 }

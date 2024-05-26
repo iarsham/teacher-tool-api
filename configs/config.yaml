@@ -13,3 +13,4 @@ app:
   port: 8080
   addr: :8080
   debug: false
+  baseAPI: /api/v1

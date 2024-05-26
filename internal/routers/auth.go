@@ -11,9 +11,9 @@ import (
 
 func AuthRouter(r *multiplexer.Router, chain multiplexer.Chain, db *sql.DB, logger *zap.Logger) {
 	userRepo := repository.NewUserRepository(db)
-	h := &handlers.AuthHandler{
-		AuthUsecase: usecase.NewAuthUsecase(userRepo),
-		Logger:      logger,
+	hr := &handlers.RegisterHandler{
+		Usecase: usecase.NewRegisterUsecase(userRepo),
+		Logger:  logger,
 	}
-	r.Handle("POST /register", chain.WrapFunc(h.RegisterHandler))
+	r.Handle("POST /register", chain.WrapFunc(hr.RegisterHandler))
 }

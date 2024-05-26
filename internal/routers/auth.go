@@ -9,10 +9,11 @@ import (
 	"go.uber.org/zap"
 )
 
-func AuthRouter(r *multiplexer.Router, chain multiplexer.Chain, db *sql.DB, l *zap.Logger) {
+func AuthRouter(r *multiplexer.Router, chain multiplexer.Chain, db *sql.DB, logger *zap.Logger) {
 	userRepo := repository.NewUserRepository(db)
 	h := &handlers.AuthHandler{
 		AuthUsecase: usecase.NewAuthUsecase(userRepo),
+		Logger:      logger,
 	}
-	r.Handle("POST ", chain.WrapFunc(h.LoginRegisterHandler))
+	r.Handle("POST /register", chain.WrapFunc(h.RegisterHandler))
 }

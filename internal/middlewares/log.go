@@ -30,13 +30,13 @@ func (rw *responseWriter) WriteHeader(code int) {
 	return
 }
 
-func LoggerMiddleware(l *zap.Logger) func(http.Handler) http.Handler {
+func LoggerMiddleware(logger *zap.Logger) func(http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			wrapped := wrapResponseWriter(w)
 			defer func() {
 				start := time.Now()
-				l.Info(
+				logger.Info(
 					"Request processed",
 					zap.Int("status", wrapped.status),
 					zap.String("domain", r.Host),

@@ -15,5 +15,10 @@ func AuthRouter(r *multiplexer.Router, chain multiplexer.Chain, db *sql.DB, logg
 		Usecase: usecase.NewRegisterUsecase(userRepo),
 		Logger:  logger,
 	}
+	hl := &handlers.LoginHandler{
+		Usecase: usecase.NewLoginUsecase(userRepo),
+		Logger:  logger,
+	}
 	r.Handle("POST /register", chain.WrapFunc(hr.RegisterHandler))
+	r.Handle("POST /login", chain.WrapFunc(hl.LoginHandler))
 }

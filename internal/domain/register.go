@@ -8,5 +8,5 @@ import (
 type RegisterUsecase interface {
 	FindByPhone(phone string) (*models.Users, error)
 	Create(user *entities.UserRequest) (*models.Users, error)
-	EncryptPass(password string) ([]byte, error)
+	EncryptPass(plainPass string) ([]byte, error)
 }

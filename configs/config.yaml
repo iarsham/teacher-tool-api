@@ -14,3 +14,6 @@ app:
   addr: :8080
   debug: false
   baseAPI: /api/v1
+  secret: secret123!@#
+  AccessHourTTL: 15
+  RefreshHourTTL: 24

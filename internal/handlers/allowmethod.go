@@ -1,12 +1,13 @@
 package handlers
 
 import (
-	"github.com/iarsham/teacher-tool-api/pkg/response"
+	"github.com/iarsham/bindme"
+	"github.com/iarsham/teacher-tool-api/internal/helpers"
 	"net/http"
 )
 
 func HttpMethodHandler(w http.ResponseWriter, r *http.Request) {
-	err := "The method specified in the request is not allowed for the resource." +
+	data := "The method specified in the request is not allowed for the resource." +
 		"Please check the allowed methods and try again."
-	response.ErrJSON(w, http.StatusMethodNotAllowed, nil, err)
+	bindme.WriteJson(w, http.StatusMethodNotAllowed, helpers.M{"error": data}, nil)
 }

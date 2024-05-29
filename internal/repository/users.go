@@ -72,7 +72,7 @@ func (u *userRepository) Delete(id uint64) error {
 
 func collectRow(row *sql.Row) (*models.Users, error) {
 	var user models.Users
-	err := row.Scan(&user.ID, &user.Phone, &user.Password, &user.CreatedAt)
+	err := row.Scan(&user.ID, &user.Phone, &user.Password, &user.CreatedAt, &user.Role)
 	return &user, err
 }
 
@@ -80,7 +80,7 @@ func collectRows(rows *sql.Rows) ([]*models.Users, error) {
 	var users []*models.Users
 	for rows.Next() {
 		var user models.Users
-		err := rows.Scan(&user.ID, &user.Phone, &user.Password, &user.CreatedAt)
+		err := rows.Scan(&user.ID, &user.Phone, &user.Password, &user.CreatedAt, &user.Role)
 		if err != nil {
 			return nil, err
 		}

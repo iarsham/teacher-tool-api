@@ -2,6 +2,8 @@ package middlewares
 
 import (
 	"context"
+	"errors"
+	"github.com/golang-jwt/jwt/v5"
 	"github.com/iarsham/bindme"
 	"github.com/iarsham/teacher-tool-api/configs"
 	"github.com/iarsham/teacher-tool-api/internal/helpers"
@@ -15,24 +17,37 @@ func JwtAuthMiddleware(logger *zap.Logger, cfg *configs.Config) func(http.Handle
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			authHeader := r.Header.Get("Authorization")
 			if authHeader == "" {
-				bindme.WriteJson(w, http.StatusUnauthorized, "Authorization header not provided", nil)
+				bindme.WriteJson(w, http.StatusUnauthorized, helpers.M{"error": "Authorization header not provided"}, nil)
 				return
 			}
 			authToken := strings.Split(authHeader, " ")
 			if len(authToken) != 2 || strings.ToLower(authToken[0]) != "bearer" {
-				bindme.WriteJson(w, http.StatusUnauthorized, "Invalid Authorization header", nil)
+				bindme.WriteJson(w, http.StatusUnauthorized, helpers.M{"response": "Invalid Authorization header"}, nil)
 				return
 			}
-			claims, err := helpers.ExtractToken(authToken[1], cfg.App.Secret)
+			token, err := helpers.IsTokenValid(authToken[1], cfg.App.Secret)
 			if err != nil {
-				logger.Error(err.Error())
-				bindme.WriteJson(w, http.StatusInternalServerError, helpers.ErrInternalServer.Error(), nil)
+				switch {
+				case errors.Is(err, jwt.ErrTokenExpired):
+					bindme.WriteJson(w, http.StatusUnauthorized, helpers.M{"error": "token is expired"}, nil)
+				default:
+					logger.Error("invalid token: failed to parse token", zap.Any("error", err))
+					bindme.WriteJson(w, http.StatusUnauthorized, helpers.M{"error": "token is invalid"}, nil)
+				}
+				return
+			}
+			claims, err := helpers.GetClaims(token)
+			if err != nil {
+				logger.Error("invalid claims: failed to parse token", zap.Any("error", err))
+				bindme.WriteJson(w, http.StatusInternalServerError, helpers.M{"error": helpers.ErrInternalServer.Error()}, nil)
 				return
 			}
 			if claims["sub"] != nil {
-				bindme.WriteJson(w, http.StatusUnprocessableEntity, "refresh token not allowed", nil)
+				bindme.WriteJson(w, http.StatusUnprocessableEntity, helpers.M{"error": "refresh token not allowed"}, nil)
+				return
 			}
-			r = r.WithContext(context.WithValue(r.Context(), "user", claims))
+			r = r.WithContext(context.WithValue(r.Context(), "user_id", claims["user_id"]))
+			r = r.WithContext(context.WithValue(r.Context(), "phone", claims["phone"]))
 			next.ServeHTTP(w, r)
 		})
 	}

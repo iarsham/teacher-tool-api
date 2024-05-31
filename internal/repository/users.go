@@ -54,11 +54,11 @@ func (u *userRepository) Create(user *entities.UserRequest) (*models.Users, erro
 	return collectRow(row)
 }
 
-func (u *userRepository) Update(id uint64, user *entities.UserRequest) (*models.Users, error) {
-	query := `UPDATE users SET phone_number = $1, password = $2 WHERE id = $3 RETURNING *`
+func (u *userRepository) Update(id uint64, user *entities.UpdateUserRequest) (*models.Users, error) {
+	query := `UPDATE users SET phone_number = $1, role=$2 WHERE id = $3 RETURNING *`
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
-	args := []interface{}{user.Phone, user.Password, id}
+	args := []interface{}{user.Phone, user.Role, id}
 	row := u.db.QueryRowContext(ctx, query, args...)
 	return collectRow(row)
 }

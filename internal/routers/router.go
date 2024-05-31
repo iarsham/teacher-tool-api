@@ -21,5 +21,10 @@ func Routes(db *sql.DB, logger *zap.Logger, cfg *configs.Config) http.Handler {
 	mux.Handle("GET /healthcheck", dynamic.WrapFunc(handlers.HealthCheckHandler))
 	authGroup := mux.Group("/auth")
 	AuthRouter(authGroup, dynamic, db, logger, cfg)
+	protected := dynamic.Append(
+		middlewares.JwtAuthMiddleware(logger, cfg),
+	)
+	userGroup := mux.Group("/user")
+	UserRouter(userGroup, protected, db, logger, cfg)
 	return mux
 }

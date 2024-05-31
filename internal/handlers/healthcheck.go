@@ -10,5 +10,5 @@ func HealthCheckHandler(w http.ResponseWriter, r *http.Request) {
 	data := helpers.M{
 		"status": "available",
 	}
-	bindme.WriteJson(w, http.StatusOK, helpers.M{"error": data}, nil)
+	bindme.WriteJson(w, http.StatusOK, helpers.M{"response": data}, nil)
 }

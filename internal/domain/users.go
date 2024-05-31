@@ -10,6 +10,14 @@ type UserRepository interface {
 	FindById(id uint64) (*models.Users, error)
 	FindByPhone(phone string) (*models.Users, error)
 	Create(user *entities.UserRequest) (*models.Users, error)
-	Update(id uint64, user *entities.UserRequest) (*models.Users, error)
+	Update(id uint64, user *entities.UpdateUserRequest) (*models.Users, error)
+	Delete(id uint64) error
+}
+
+type UserUsecase interface {
+	FindAll() ([]*models.Users, error)
+	FindById(id uint64) (*models.Users, error)
+	FindByPhone(phone string) (*models.Users, error)
+	Update(id uint64, user *entities.UpdateUserRequest) (*models.Users, error)
 	Delete(id uint64) error
 }

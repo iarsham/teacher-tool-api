@@ -7,13 +7,11 @@ import (
 	"github.com/iarsham/teacher-tool-api/internal/domain"
 	"github.com/iarsham/teacher-tool-api/internal/entities"
 	"github.com/iarsham/teacher-tool-api/internal/helpers"
-	"go.uber.org/zap"
 	"net/http"
 )
 
 type LoginHandler struct {
 	Usecase domain.LoginUsecase
-	Logger  *zap.Logger
 }
 
 func (a *LoginHandler) LoginHandler(w http.ResponseWriter, r *http.Request) {

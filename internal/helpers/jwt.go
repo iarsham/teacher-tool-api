@@ -24,10 +24,10 @@ func CreateRefreshToken(userID uint64, secretKey string, expire int) (string, er
 	return jwt.NewWithClaims(jwt.SigningMethodHS256, claims).SignedString([]byte(secretKey))
 }
 
-func IsAuthorized(reqToken string, secretKey string) (*jwt.Token, error) {
+func IsTokenValid(reqToken string, secretKey string) (*jwt.Token, error) {
 	token, err := jwt.Parse(reqToken, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-			return nil, jwt.ErrTokenUnverifiable
+			return nil, jwt.ErrSignatureInvalid
 		}
 		return []byte(secretKey), nil
 	})
@@ -37,18 +37,14 @@ func IsAuthorized(reqToken string, secretKey string) (*jwt.Token, error) {
 	return token, nil
 }
 
-func ExtractToken(token string, secretKey string) (M, error) {
+func GetClaims(token *jwt.Token) (M, error) {
 	claimsMap := make(M)
-	verify, err := IsAuthorized(token, secretKey)
-	if err != nil {
-		return nil, err
-	}
-	claims, ok := verify.Claims.(jwt.MapClaims)
-	if ok || verify.Valid {
+	claims, ok := token.Claims.(jwt.MapClaims)
+	if ok && token.Valid {
 		for k, v := range claims {
 			claimsMap[k] = v
 		}
 		return claimsMap, nil
 	}
-	return nil, jwt.ErrTokenUnverifiable
+	return nil, ErrInvalidClaims
 }

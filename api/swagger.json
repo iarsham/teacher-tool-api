@@ -1,0 +1,399 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "API for Teacher Tools application that provides various endpoints for managing data.",
+        "title": "Teacher-Tools-API",
+        "termsOfService": "http://swagger.io/terms/",
+        "contact": {
+            "name": "Arsham Roshannejad",
+            "url": "arsham.cloudarshamdev2001@gmail.com",
+            "email": "arshamdev2001@gmail.com"
+        },
+        "license": {
+            "name": "MIT",
+            "url": "https://www.mit.edu/~amini/LICENSE.md"
+        },
+        "version": "0.0.0"
+    },
+    "host": "localhost:8080",
+    "basePath": "/api/v1",
+    "paths": {
+        "/healthcheck": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Server"
+                ],
+                "summary": "Health check",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.HealthCheck"
+                        }
+                    }
+                }
+            }
+        },
+        "/login": {
+            "post": {
+                "description": "Login a user",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Login",
+                "parameters": [
+                    {
+                        "description": "User data",
+                        "name": "userRequest",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_iarsham_teacher-tool-api_internal_entities.UserRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.LoginSuccess"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.BadRequest"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/response.UserNotFound"
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "schema": {
+                            "$ref": "#/definitions/response.WrongPassword"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.InternalServerError"
+                        }
+                    }
+                }
+            }
+        },
+        "/register": {
+            "post": {
+                "description": "Register a new user",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Register",
+                "parameters": [
+                    {
+                        "description": "User data",
+                        "name": "userRequest",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_iarsham_teacher-tool-api_internal_entities.UserRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/response.UserCreated"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.BadRequest"
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "schema": {
+                            "$ref": "#/definitions/response.UserAlreadyExists"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.InternalServerError"
+                        }
+                    }
+                }
+            }
+        },
+        "/user": {
+            "get": {
+                "description": "Get a user data and properties",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Get User",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.UserData"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/response.UserNotFound"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.InternalServerError"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "Update a user based on jwt and current user",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Update User",
+                "parameters": [
+                    {
+                        "description": "User data",
+                        "name": "userRequest",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_iarsham_teacher-tool-api_internal_entities.UpdateUserRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.UserData"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.BadRequest"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.InternalServerError"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Delete a user based on jwt and current user",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Delete User",
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.InternalServerError"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "github_com_iarsham_teacher-tool-api_internal_entities.UpdateUserRequest": {
+            "type": "object",
+            "required": [
+                "phone"
+            ],
+            "properties": {
+                "phone": {
+                    "type": "string",
+                    "maxLength": 15,
+                    "minLength": 10,
+                    "example": "+9891154326250"
+                },
+                "role": {
+                    "type": "integer",
+                    "enum": [
+                        0,
+                        1
+                    ],
+                    "example": 1
+                }
+            }
+        },
+        "github_com_iarsham_teacher-tool-api_internal_entities.UserRequest": {
+            "type": "object",
+            "required": [
+                "password",
+                "phone"
+            ],
+            "properties": {
+                "password": {
+                    "type": "string",
+                    "maxLength": 32,
+                    "minLength": 8,
+                    "example": "1qaz2wsx"
+                },
+                "phone": {
+                    "type": "string",
+                    "maxLength": 15,
+                    "minLength": 10,
+                    "example": "+9891154326250"
+                }
+            }
+        },
+        "response.BadRequest": {
+            "type": "object",
+            "properties": {
+                "error": {
+                    "type": "string",
+                    "example": "bad request"
+                }
+            }
+        },
+        "response.HealthCheck": {
+            "type": "object",
+            "properties": {
+                "status": {
+                    "type": "string",
+                    "example": "available"
+                }
+            }
+        },
+        "response.InternalServerError": {
+            "type": "object",
+            "properties": {
+                "error": {
+                    "type": "string",
+                    "example": "internal server error"
+                }
+            }
+        },
+        "response.LoginSuccess": {
+            "type": "object",
+            "properties": {
+                "accessToken": {
+                    "type": "string",
+                    "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"
+                },
+                "refreshToken": {
+                    "type": "string",
+                    "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"
+                }
+            }
+        },
+        "response.UserAlreadyExists": {
+            "type": "object",
+            "properties": {
+                "error": {
+                    "type": "string",
+                    "example": "user already exists"
+                }
+            }
+        },
+        "response.UserCreated": {
+            "type": "object",
+            "properties": {
+                "response": {
+                    "type": "string",
+                    "example": "user created"
+                }
+            }
+        },
+        "response.UserData": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string",
+                    "example": "2024-01-29T03:09:00+03:30"
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "phone": {
+                    "type": "string",
+                    "example": "+989029266610"
+                },
+                "role": {
+                    "type": "integer",
+                    "example": 1
+                }
+            }
+        },
+        "response.UserNotFound": {
+            "type": "object",
+            "properties": {
+                "error": {
+                    "type": "string",
+                    "example": "user not found"
+                }
+            }
+        },
+        "response.WrongPassword": {
+            "type": "object",
+            "properties": {
+                "error": {
+                    "type": "string",
+                    "example": "wrong password"
+                }
+            }
+        }
+    }
+}

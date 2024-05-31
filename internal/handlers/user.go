@@ -14,6 +14,17 @@ type UserHandler struct {
 	Usecase domain.UserUsecase
 }
 
+// GetUserHandler godoc
+//
+//	@Summary		Get User
+//	@Description	Get a user data and properties
+//	@Accept			json
+//	@Produce		json
+//	@Tags			Users
+//	@Success		200	{object}	response.UserData
+//	@Failure		404	{object}	response.UserNotFound
+//	@Failure		500	{object}	response.InternalServerError
+//	@router			/user [get]
 func (u *UserHandler) GetUserHandler(w http.ResponseWriter, r *http.Request) {
 	userID := helpers.GetUserID(r)
 	user, err := u.Usecase.FindById(userID)
@@ -28,6 +39,18 @@ func (u *UserHandler) GetUserHandler(w http.ResponseWriter, r *http.Request) {
 	bindme.WriteJson(w, http.StatusOK, user, nil)
 }
 
+// UpdateUserHandler godoc
+//
+//	@Summary		Update User
+//	@Description	Update a user based on jwt and current user
+//	@Accept			json
+//	@Produce		json
+//	@Tags			Users
+//	@Param			userRequest	body		entities.UpdateUserRequest	true	"User data"
+//	@Success		200			{object}	response.UserData
+//	@Failure		400			{object}	response.BadRequest
+//	@Failure		500			{object}	response.InternalServerError
+//	@router			/user [put]
 func (u *UserHandler) UpdateUserHandler(w http.ResponseWriter, r *http.Request) {
 	userID := helpers.GetUserID(r)
 	data := new(entities.UpdateUserRequest)
@@ -43,6 +66,16 @@ func (u *UserHandler) UpdateUserHandler(w http.ResponseWriter, r *http.Request) 
 	bindme.WriteJson(w, http.StatusOK, user, nil)
 }
 
+// DeleteUserHandler godoc
+//
+//	@Summary		Delete User
+//	@Description	Delete a user based on jwt and current user
+//	@Accept			json
+//	@Produce		json
+//	@Tags			Users
+//	@Success		204	{object}	nil
+//	@Failure		500	{object}	response.InternalServerError
+//	@router			/user [delete]
 func (u *UserHandler) DeleteUserHandler(w http.ResponseWriter, r *http.Request) {
 	userID := helpers.GetUserID(r)
 	if err := u.Usecase.Delete(userID); err != nil {

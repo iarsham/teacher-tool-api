@@ -14,6 +14,20 @@ type LoginHandler struct {
 	Usecase domain.LoginUsecase
 }
 
+// LoginHandler godoc
+//
+//	@Summary		Login
+//	@Description	Login a user
+//	@Accept			json
+//	@Produce		json
+//	@Tags			Auth
+//	@Param			userRequest	body		entities.UserRequest	true	"User data"
+//	@Success		200			{object}	response.LoginSuccess
+//	@Failure		400			{object}	response.BadRequest
+//	@Failure		404			{object}	response.UserNotFound
+//	@Failure		422			{object}	response.WrongPassword
+//	@Failure		500			{object}	response.InternalServerError
+//	@router			/login [post]
 func (a *LoginHandler) LoginHandler(w http.ResponseWriter, r *http.Request) {
 	data := new(entities.UserRequest)
 	if err := bindme.ReadJson(r, data); err != nil {

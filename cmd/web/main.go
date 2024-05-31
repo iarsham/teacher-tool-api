@@ -11,6 +11,18 @@ import (
 	"time"
 )
 
+// @title			Teacher-Tools-API
+// @version		0.0.0
+// @description	API for Teacher Tools application that provides various endpoints for managing data.
+// @termsOfService	http://swagger.io/terms/
+// @termsOfService	http://swagger.io/terms/
+// @contact.name	Arsham Roshannejad
+// @contact.url	arsham.cloudarshamdev2001@gmail.com
+// @contact.email	arshamdev2001@gmail.com
+// @license.name	MIT
+// @license.url	https://www.mit.edu/~amini/LICENSE.md
+// @host			localhost:8080
+// @BasePath		/api/v1
 func main() {
 	debug := flag.Bool("debug", false, "debug mode")
 	flag.Parse()

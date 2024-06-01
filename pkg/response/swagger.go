@@ -36,3 +36,7 @@ type WrongPassword struct {
 }
 
 type UserData models.Users
+
+type PasswordChanged struct {
+	Response string `example:"password changed successfully"`
+}

@@ -258,9 +258,76 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/user/change-password": {
+            "post": {
+                "description": "Change user password",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Password Change",
+                "parameters": [
+                    {
+                        "description": "User data",
+                        "name": "userRequest",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_iarsham_teacher-tool-api_internal_entities.PassChangeRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.PasswordChanged"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.BadRequest"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.InternalServerError"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
+        "github_com_iarsham_teacher-tool-api_internal_entities.PassChangeRequest": {
+            "type": "object",
+            "required": [
+                "confirm_password",
+                "password"
+            ],
+            "properties": {
+                "confirm_password": {
+                    "type": "string",
+                    "maxLength": 32,
+                    "minLength": 8,
+                    "example": "1qaz2wsx"
+                },
+                "password": {
+                    "type": "string",
+                    "maxLength": 32,
+                    "minLength": 8,
+                    "example": "1qaz2wsx"
+                }
+            }
+        },
         "github_com_iarsham_teacher-tool-api_internal_entities.UpdateUserRequest": {
             "type": "object",
             "required": [
@@ -341,6 +408,15 @@ const docTemplate = `{
                 "refreshToken": {
                     "type": "string",
                     "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"
+                }
+            }
+        },
+        "response.PasswordChanged": {
+            "type": "object",
+            "properties": {
+                "response": {
+                    "type": "string",
+                    "example": "password changed successfully"
                 }
             }
         },

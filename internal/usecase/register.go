@@ -6,7 +6,6 @@ import (
 	"github.com/iarsham/teacher-tool-api/internal/helpers"
 	"github.com/iarsham/teacher-tool-api/internal/models"
 	"go.uber.org/zap"
-	"golang.org/x/crypto/bcrypt"
 )
 
 type registerUsecase struct {
@@ -40,7 +39,7 @@ func (r *registerUsecase) Create(user *entities.UserRequest) (*models.Users, err
 }
 
 func (r *registerUsecase) EncryptPass(plainPass string) ([]byte, error) {
-	encryptPass, err := bcrypt.GenerateFromPassword([]byte(plainPass), bcrypt.DefaultCost)
+	encryptPass, err := helpers.EncryptPass(plainPass)
 	if err != nil {
 		r.logger.Error(err.Error())
 		return []byte(nil), err

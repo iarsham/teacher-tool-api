@@ -63,6 +63,15 @@ func (u *userRepository) Update(id uint64, user *entities.UpdateUserRequest) (*m
 	return collectRow(row)
 }
 
+func (u *userRepository) UpdatePassword(id uint64, password string) (*models.Users, error) {
+	query := `UPDATE users SET password = $1 WHERE id = $2 RETURNING *`
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+	args := []interface{}{password, id}
+	row := u.db.QueryRowContext(ctx, query, args...)
+	return collectRow(row)
+}
+
 func (u *userRepository) Delete(id uint64) error {
 	query := `DELETE FROM users WHERE id = $1`
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)

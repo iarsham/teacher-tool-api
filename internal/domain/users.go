@@ -11,6 +11,7 @@ type UserRepository interface {
 	FindByPhone(phone string) (*models.Users, error)
 	Create(user *entities.UserRequest) (*models.Users, error)
 	Update(id uint64, user *entities.UpdateUserRequest) (*models.Users, error)
+	UpdatePassword(id uint64, password string) (*models.Users, error)
 	Delete(id uint64) error
 }
 

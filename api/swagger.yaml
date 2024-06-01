@@ -1,5 +1,21 @@
 basePath: /api/v1
 definitions:
+  github_com_iarsham_teacher-tool-api_internal_entities.PassChangeRequest:
+    properties:
+      confirm_password:
+        example: 1qaz2wsx
+        maxLength: 32
+        minLength: 8
+        type: string
+      password:
+        example: 1qaz2wsx
+        maxLength: 32
+        minLength: 8
+        type: string
+    required:
+    - confirm_password
+    - password
+    type: object
   github_com_iarsham_teacher-tool-api_internal_entities.UpdateUserRequest:
     properties:
       phone:
@@ -57,6 +73,12 @@ definitions:
         type: string
       refreshToken:
         example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+        type: string
+    type: object
+  response.PasswordChanged:
+    properties:
+      response:
+        example: password changed successfully
         type: string
     type: object
   response.UserAlreadyExists:
@@ -265,6 +287,36 @@ paths:
           schema:
             $ref: '#/definitions/response.InternalServerError'
       summary: Update User
+      tags:
+      - Users
+  /user/change-password:
+    post:
+      consumes:
+      - application/json
+      description: Change user password
+      parameters:
+      - description: User data
+        in: body
+        name: userRequest
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_iarsham_teacher-tool-api_internal_entities.PassChangeRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.PasswordChanged'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.BadRequest'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.InternalServerError'
+      summary: Password Change
       tags:
       - Users
 swagger: "2.0"

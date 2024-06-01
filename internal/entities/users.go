@@ -9,3 +9,12 @@ type UpdateUserRequest struct {
 	Phone string `json:"phone" validate:"required,min=10,max=15" example:"+9891154326250"`
 	Role  int    `json:"role"  validate:"oneof=0 1" example:"1" enums:"0,1"`
 }
+
+type PassChangeRequest struct {
+	Password        string `json:"password" validate:"required,min=8,max=32" example:"1qaz2wsx"`
+	ConfirmPassword string `json:"confirm_password" validate:"required,min=8,max=32" example:"1qaz2wsx"`
+}
+
+func (p *PassChangeRequest) PasswordsIsEqual() bool {
+	return p.Password == p.ConfirmPassword
+}

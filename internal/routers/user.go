@@ -15,7 +15,11 @@ func UserRouter(r *multiplexer.Router, chain multiplexer.Chain, db *sql.DB, logg
 	hu := &handlers.UserHandler{
 		Usecase: usecase.NewUserUsecase(userRepo, logger),
 	}
+	hp := &handlers.PasswordHandler{
+		Usecase: usecase.NewPassUsecase(userRepo, logger),
+	}
 	r.Handle("GET ", chain.WrapFunc(hu.GetUserHandler))
 	r.Handle("PUT ", chain.WrapFunc(hu.UpdateUserHandler))
 	r.Handle("DELETE ", chain.WrapFunc(hu.DeleteUserHandler))
+	r.Handle("POST /change-password", chain.WrapFunc(hp.PasswordChangeHandler))
 }

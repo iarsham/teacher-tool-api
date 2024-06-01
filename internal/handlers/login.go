@@ -34,6 +34,10 @@ func (a *LoginHandler) LoginHandler(w http.ResponseWriter, r *http.Request) {
 		bindme.WriteJson(w, http.StatusBadRequest, helpers.M{"error": err.Error()}, nil)
 		return
 	}
+	if ok := a.Usecase.IsPhoneValid(data.Phone); !ok {
+		bindme.WriteJson(w, http.StatusBadRequest, helpers.M{"error": "invalid phone number"}, nil)
+		return
+	}
 	user, err := a.Usecase.FindByPhone(data.Phone)
 	if errors.Is(err, sql.ErrNoRows) {
 		bindme.WriteJson(w, http.StatusNotFound, helpers.M{"error": "user not found"}, nil)

@@ -33,6 +33,10 @@ func (a *RegisterHandler) RegisterHandler(w http.ResponseWriter, r *http.Request
 		bindme.WriteJson(w, http.StatusBadRequest, helpers.M{"error": err.Error()}, nil)
 		return
 	}
+	if ok := a.Usecase.IsPhoneValid(data.Phone); !ok {
+		bindme.WriteJson(w, http.StatusBadRequest, helpers.M{"error": "invalid phone number"}, nil)
+		return
+	}
 	if _, err := a.Usecase.FindByPhone(data.Phone); !errors.Is(err, sql.ErrNoRows) {
 		bindme.WriteJson(w, http.StatusConflict, helpers.M{"error": "user already exists"}, nil)
 		return

@@ -7,4 +7,5 @@ type LoginUsecase interface {
 	VerifyPass(hashPass, plainPass string) error
 	CreateAccessToken(userID uint64, phone string) (string, error)
 	CreateRefreshToken(userID uint64) (string, error)
+	IsPhoneValid(phone string) bool
 }

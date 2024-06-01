@@ -3,6 +3,7 @@ package usecase
 import (
 	"github.com/iarsham/teacher-tool-api/internal/domain"
 	"github.com/iarsham/teacher-tool-api/internal/entities"
+	"github.com/iarsham/teacher-tool-api/internal/helpers"
 	"github.com/iarsham/teacher-tool-api/internal/models"
 	"go.uber.org/zap"
 	"golang.org/x/crypto/bcrypt"
@@ -45,4 +46,8 @@ func (r *registerUsecase) EncryptPass(plainPass string) ([]byte, error) {
 		return []byte(nil), err
 	}
 	return encryptPass, nil
+}
+
+func (r *registerUsecase) IsPhoneValid(phone string) bool {
+	return helpers.IsPhoneValid(phone)
 }

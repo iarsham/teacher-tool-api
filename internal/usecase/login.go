@@ -57,3 +57,7 @@ func (l *loginUsecase) CreateRefreshToken(userID uint64) (string, error) {
 	}
 	return refresh, nil
 }
+
+func (l *loginUsecase) IsPhoneValid(phone string) bool {
+	return helpers.IsPhoneValid(phone)
+}

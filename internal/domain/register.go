@@ -9,4 +9,5 @@ type RegisterUsecase interface {
 	FindByPhone(phone string) (*models.Users, error)
 	Create(user *entities.UserRequest) (*models.Users, error)
 	EncryptPass(plainPass string) ([]byte, error)
+	IsPhoneValid(phone string) bool
 }

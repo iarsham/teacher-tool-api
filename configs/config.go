@@ -31,6 +31,8 @@ type App struct {
 	Secret         string
 	AccessHourTTL  int
 	RefreshHourTTL int
+	CorsOrigins    []string
+	CorsMaxAge     int
 }
 
 type Config struct {

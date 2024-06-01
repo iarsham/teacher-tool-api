@@ -17,3 +17,5 @@ app:
   secret: secret123!@#
   AccessHourTTL: 15
   RefreshHourTTL: 24
+  CorsOrigins: [ "*" ]
+  CorsMaxAge: 300

@@ -34,5 +34,5 @@ func Routes(db *sql.DB, logger *zap.Logger, cfg *configs.Config) http.Handler {
 	)
 	userGroup := mux.Group("/user")
 	UserRouter(userGroup, protected, db, logger, cfg)
-	return mux
+	return middlewares.CorsMiddleware(cfg).Handler(mux)
 }

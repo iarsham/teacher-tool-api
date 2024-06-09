@@ -24,10 +24,13 @@ import (
 // @host			localhost:8080
 // @BasePath		/api/v1
 func main() {
-	debug := flag.Bool("debug", false, "debug mode")
+	debug := flag.Bool("debug", true, "debug mode")
 	flag.Parse()
 
-	logs := logger.NewZapLog(*debug)
+	logs, err := logger.NewZapLog(*debug)
+	if err != nil {
+		panic(err)
+	}
 	defer logs.Sync()
 
 	cfg, err := configs.NewConfig()

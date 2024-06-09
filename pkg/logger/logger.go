@@ -2,11 +2,27 @@ package logger
 
 import (
 	"go.uber.org/zap"
+	"go.uber.org/zap/zapcore"
 )
 
-func NewZapLog(debug bool) *zap.Logger {
+func NewZapLog(debug bool) (*zap.Logger, error) {
 	if debug {
-		return zap.Must(zap.NewDevelopment())
+		return development()
 	}
-	return zap.Must(zap.NewProduction())
+	return production()
+}
+
+func development() (*zap.Logger, error) {
+	cfg := zap.NewDevelopmentConfig()
+	cfg.DisableStacktrace = true
+	cfg.EncoderConfig.EncodeLevel = zapcore.CapitalColorLevelEncoder
+	cfg.EncoderConfig.TimeKey = zapcore.OmitKey
+	return cfg.Build()
+}
+
+func production() (*zap.Logger, error) {
+	cfg := zap.NewProductionConfig()
+	cfg.DisableStacktrace = true
+	cfg.EncoderConfig.TimeKey = zapcore.OmitKey
+	return cfg.Build()
 }

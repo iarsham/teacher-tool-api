@@ -14,6 +14,15 @@ type TemplateHandler struct {
 	Usecase domain.TemplateUsecase
 }
 
+// GetAllTemplatesHandler godoc
+//
+//	@Summary		Get Templates
+//	@Description	Get all templates
+//	@Produce		json
+//	@Tags			Templates
+//	@Success		200	{object}	response.AllTemplates
+//	@Failure		500	{object}	response.InternalServerError
+//	@router			/template [get]
 func (t *TemplateHandler) GetAllTemplatesHandler(w http.ResponseWriter, r *http.Request) {
 	templates, err := t.Usecase.FindAll()
 	if err != nil {
@@ -23,6 +32,19 @@ func (t *TemplateHandler) GetAllTemplatesHandler(w http.ResponseWriter, r *http.
 	bindme.WriteJson(w, http.StatusOK, templates, nil)
 }
 
+// CreateTemplateHandler godoc
+//
+//	@Summary		Create Template
+//	@Description	Create a new template for exam
+//	@Accept			multipart/form-data
+//	@Produce		json
+//	@Tags			Templates
+//	@Param			templateRequest	body		entities.TemplateRequest	true	"Template data"
+//	@Success		201				{object}	response.TemplateCreated
+//	@Failure		400				{object}	response.BadRequest
+//	@Failure		408				{object}	response.TemplateExists
+//	@Failure		500				{object}	response.InternalServerError
+//	@router			/template [post]
 func (t *TemplateHandler) CreateTemplateHandler(w http.ResponseWriter, r *http.Request) {
 	data := new(entities.TemplateRequest)
 	userID := helpers.GetUserID(r)
@@ -59,6 +81,16 @@ func (t *TemplateHandler) CreateTemplateHandler(w http.ResponseWriter, r *http.R
 	bindme.WriteJson(w, http.StatusCreated, helpers.M{"response": "template created"}, nil)
 }
 
+// DeleteTemplateHandler godoc
+//
+//	@Summary		Delete Template
+//	@Description	Delete a template with id
+//	@Produce		json
+//	@Tags			Templates
+//	@Param			id	path		int	true	"Template ID"
+//	@Success		204	{object}	nil
+//	@Failure		500	{object}	response.InternalServerError
+//	@router			/template/{id} [delete]
 func (t *TemplateHandler) DeleteTemplateHandler(w http.ResponseWriter, r *http.Request) {
 	templateID, err := t.Usecase.GetObjID(r)
 	if err != nil {

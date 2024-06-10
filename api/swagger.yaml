@@ -16,6 +16,15 @@ definitions:
     - confirm_password
     - password
     type: object
+  github_com_iarsham_teacher-tool-api_internal_entities.TemplateRequest:
+    properties:
+      file:
+        $ref: '#/definitions/multipart.FileHeader'
+      userID:
+        type: integer
+    required:
+    - file
+    type: object
   github_com_iarsham_teacher-tool-api_internal_entities.UpdateUserRequest:
     properties:
       phone:
@@ -48,6 +57,30 @@ definitions:
     - password
     - phone
     type: object
+  github_com_iarsham_teacher-tool-api_internal_models.Templates:
+    properties:
+      created_at:
+        example: "2024-01-29T03:09:00+03:30"
+        type: string
+      file:
+        example: domain.com/media/file.docx
+        type: string
+      id:
+        example: 1
+        type: integer
+      user_id:
+        example: 1
+        type: integer
+    type: object
+  multipart.FileHeader:
+    properties:
+      filename:
+        type: string
+      header:
+        $ref: '#/definitions/textproto.MIMEHeader'
+      size:
+        type: integer
+    type: object
   response.BadRequest:
     properties:
       error:
@@ -79,6 +112,18 @@ definitions:
     properties:
       response:
         example: password changed successfully
+        type: string
+    type: object
+  response.TemplateCreated:
+    properties:
+      response:
+        example: template created
+        type: string
+    type: object
+  response.TemplateExists:
+    properties:
+      error:
+        example: template already exists
         type: string
     type: object
   response.UserAlreadyExists:
@@ -120,6 +165,12 @@ definitions:
         example: wrong password
         type: string
     type: object
+  textproto.MIMEHeader:
+    additionalProperties:
+      items:
+        type: string
+      type: array
+    type: object
 host: localhost:8080
 info:
   contact:
@@ -135,21 +186,7 @@ info:
   title: Teacher-Tools-API
   version: 0.0.0
 paths:
-  /healthcheck:
-    get:
-      consumes:
-      - application/json
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/response.HealthCheck'
-      summary: Health check
-      tags:
-      - Server
-  /login:
+  /auth/login:
     post:
       consumes:
       - application/json
@@ -187,7 +224,7 @@ paths:
       summary: Login
       tags:
       - Auth
-  /register:
+  /auth/register:
     post:
       consumes:
       - application/json
@@ -221,6 +258,93 @@ paths:
       summary: Register
       tags:
       - Auth
+  /healthcheck:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.HealthCheck'
+      summary: Health check
+      tags:
+      - Server
+  /template:
+    get:
+      description: Get all templates
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/github_com_iarsham_teacher-tool-api_internal_models.Templates'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.InternalServerError'
+      summary: Get Templates
+      tags:
+      - Templates
+    post:
+      consumes:
+      - multipart/form-data
+      description: Create a new template for exam
+      parameters:
+      - description: Template data
+        in: body
+        name: templateRequest
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_iarsham_teacher-tool-api_internal_entities.TemplateRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/response.TemplateCreated'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.BadRequest'
+        "408":
+          description: Request Timeout
+          schema:
+            $ref: '#/definitions/response.TemplateExists'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.InternalServerError'
+      summary: Create Template
+      tags:
+      - Templates
+  /template/{id}:
+    delete:
+      description: Delete a template with id
+      parameters:
+      - description: Template ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.InternalServerError'
+      summary: Delete Template
+      tags:
+      - Templates
   /user:
     delete:
       consumes:

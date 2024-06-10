@@ -26,7 +26,7 @@ type RegisterHandler struct {
 //	@Failure		400			{object}	response.BadRequest
 //	@Failure		409			{object}	response.UserAlreadyExists
 //	@Failure		500			{object}	response.InternalServerError
-//	@Router			/register [post]
+//	@Router			/auth/register [post]
 func (a *RegisterHandler) RegisterHandler(w http.ResponseWriter, r *http.Request) {
 	data := new(entities.UserRequest)
 	if err := bindme.ReadJson(r, data); err != nil {

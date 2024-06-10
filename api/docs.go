@@ -24,29 +24,7 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/healthcheck": {
-            "get": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Server"
-                ],
-                "summary": "Health check",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/response.HealthCheck"
-                        }
-                    }
-                }
-            }
-        },
-        "/login": {
+        "/auth/login": {
             "post": {
                 "description": "Login a user",
                 "consumes": [
@@ -104,7 +82,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/register": {
+        "/auth/register": {
             "post": {
                 "description": "Register a new user",
                 "consumes": [
@@ -146,6 +124,139 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/response.UserAlreadyExists"
                         }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.InternalServerError"
+                        }
+                    }
+                }
+            }
+        },
+        "/healthcheck": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Server"
+                ],
+                "summary": "Health check",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.HealthCheck"
+                        }
+                    }
+                }
+            }
+        },
+        "/template": {
+            "get": {
+                "description": "Get all templates",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Templates"
+                ],
+                "summary": "Get Templates",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/github_com_iarsham_teacher-tool-api_internal_models.Templates"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.InternalServerError"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create a new template for exam",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Templates"
+                ],
+                "summary": "Create Template",
+                "parameters": [
+                    {
+                        "description": "Template data",
+                        "name": "templateRequest",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_iarsham_teacher-tool-api_internal_entities.TemplateRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/response.TemplateCreated"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.BadRequest"
+                        }
+                    },
+                    "408": {
+                        "description": "Request Timeout",
+                        "schema": {
+                            "$ref": "#/definitions/response.TemplateExists"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.InternalServerError"
+                        }
+                    }
+                }
+            }
+        },
+        "/template/{id}": {
+            "delete": {
+                "description": "Delete a template with id",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Templates"
+                ],
+                "summary": "Delete Template",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Template ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
                     },
                     "500": {
                         "description": "Internal Server Error",
@@ -328,6 +439,20 @@ const docTemplate = `{
                 }
             }
         },
+        "github_com_iarsham_teacher-tool-api_internal_entities.TemplateRequest": {
+            "type": "object",
+            "required": [
+                "file"
+            ],
+            "properties": {
+                "file": {
+                    "$ref": "#/definitions/multipart.FileHeader"
+                },
+                "userID": {
+                    "type": "integer"
+                }
+            }
+        },
         "github_com_iarsham_teacher-tool-api_internal_entities.UpdateUserRequest": {
             "type": "object",
             "required": [
@@ -368,6 +493,41 @@ const docTemplate = `{
                     "maxLength": 15,
                     "minLength": 10,
                     "example": "+9891154326250"
+                }
+            }
+        },
+        "github_com_iarsham_teacher-tool-api_internal_models.Templates": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string",
+                    "example": "2024-01-29T03:09:00+03:30"
+                },
+                "file": {
+                    "type": "string",
+                    "example": "domain.com/media/file.docx"
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "user_id": {
+                    "type": "integer",
+                    "example": 1
+                }
+            }
+        },
+        "multipart.FileHeader": {
+            "type": "object",
+            "properties": {
+                "filename": {
+                    "type": "string"
+                },
+                "header": {
+                    "$ref": "#/definitions/textproto.MIMEHeader"
+                },
+                "size": {
+                    "type": "integer"
                 }
             }
         },
@@ -417,6 +577,24 @@ const docTemplate = `{
                 "response": {
                     "type": "string",
                     "example": "password changed successfully"
+                }
+            }
+        },
+        "response.TemplateCreated": {
+            "type": "object",
+            "properties": {
+                "response": {
+                    "type": "string",
+                    "example": "template created"
+                }
+            }
+        },
+        "response.TemplateExists": {
+            "type": "object",
+            "properties": {
+                "error": {
+                    "type": "string",
+                    "example": "template already exists"
                 }
             }
         },
@@ -474,6 +652,15 @@ const docTemplate = `{
                 "error": {
                     "type": "string",
                     "example": "wrong password"
+                }
+            }
+        },
+        "textproto.MIMEHeader": {
+            "type": "object",
+            "additionalProperties": {
+                "type": "array",
+                "items": {
+                    "type": "string"
                 }
             }
         }

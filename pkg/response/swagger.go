@@ -40,3 +40,13 @@ type UserData models.Users
 type PasswordChanged struct {
 	Response string `example:"password changed successfully"`
 }
+
+type AllTemplates []models.Templates
+
+type TemplateCreated struct {
+	Response string `example:"template created"`
+}
+
+type TemplateExists struct {
+	Error string `example:"template already exists"`
+}

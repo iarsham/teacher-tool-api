@@ -27,7 +27,7 @@ type LoginHandler struct {
 //	@Failure		404			{object}	response.UserNotFound
 //	@Failure		422			{object}	response.WrongPassword
 //	@Failure		500			{object}	response.InternalServerError
-//	@router			/login [post]
+//	@router			/auth/login [post]
 func (a *LoginHandler) LoginHandler(w http.ResponseWriter, r *http.Request) {
 	data := new(entities.UserRequest)
 	if err := bindme.ReadJson(r, data); err != nil {

@@ -35,9 +35,19 @@ type App struct {
 	CorsMaxAge     int
 }
 
+type S3 struct {
+	AccessKey     string
+	SecretKey     string
+	BucketName    string
+	Endpoint      string
+	Region        string
+	StorageDomain string
+}
+
 type Config struct {
 	Postgres *Postgres
 	App      *App
+	S3       *S3
 }
 
 func NewConfig() (*Config, error) {

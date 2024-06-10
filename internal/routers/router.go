@@ -22,17 +22,19 @@ func Routes(db *sql.DB, logger *zap.Logger, cfg *configs.Config) http.Handler {
 	))
 	mux.NotFound = http.HandlerFunc(handlers.NotFoundHandler)
 	mux.MethodNotAllowed = http.HandlerFunc(handlers.HttpMethodHandler)
+	mux.HandleFunc("GET /healthcheck", handlers.HealthCheckHandler)
 	dynamic := multiplexer.NewChain(
 		middlewares.LoggerMiddleware(logger),
 		middlewares.RecoveryMiddleware(logger),
 	)
-	mux.Handle("GET /healthcheck", dynamic.WrapFunc(handlers.HealthCheckHandler))
-	authGroup := mux.Group("/auth")
-	AuthRouter(authGroup, dynamic, db, logger, cfg)
 	protected := dynamic.Append(
 		middlewares.JwtAuthMiddleware(logger, cfg),
 	)
+	authGroup := mux.Group("/auth")
 	userGroup := mux.Group("/user")
-	UserRouter(userGroup, protected, db, logger, cfg)
+	templateGroup := mux.Group("/template")
+	AuthRouter(authGroup, dynamic, db, logger, cfg)
+	UserRouter(userGroup, protected, db, logger)
+	TemplateRouter(templateGroup, protected, db, logger, cfg)
 	return middlewares.CorsMiddleware(cfg).Handler(mux)
 }

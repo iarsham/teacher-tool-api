@@ -26,7 +26,7 @@ func (u *userRepository) FindAll() ([]*models.Users, error) {
 		return nil, err
 	}
 	defer rows.Close()
-	return collectRows(rows)
+	return collectUserRows(rows)
 }
 
 func (u *userRepository) FindById(id uint64) (*models.Users, error) {
@@ -34,7 +34,7 @@ func (u *userRepository) FindById(id uint64) (*models.Users, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 	row := u.db.QueryRowContext(ctx, query, id)
-	return collectRow(row)
+	return collectUserRow(row)
 }
 
 func (u *userRepository) FindByPhone(phone string) (*models.Users, error) {
@@ -42,7 +42,7 @@ func (u *userRepository) FindByPhone(phone string) (*models.Users, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 	row := u.db.QueryRowContext(ctx, query, phone)
-	return collectRow(row)
+	return collectUserRow(row)
 }
 
 func (u *userRepository) Create(user *entities.UserRequest) (*models.Users, error) {
@@ -51,7 +51,7 @@ func (u *userRepository) Create(user *entities.UserRequest) (*models.Users, erro
 	defer cancel()
 	args := []interface{}{user.Phone, user.Password}
 	row := u.db.QueryRowContext(ctx, query, args...)
-	return collectRow(row)
+	return collectUserRow(row)
 }
 
 func (u *userRepository) Update(id uint64, user *entities.UpdateUserRequest) (*models.Users, error) {
@@ -60,7 +60,7 @@ func (u *userRepository) Update(id uint64, user *entities.UpdateUserRequest) (*m
 	defer cancel()
 	args := []interface{}{user.Phone, user.Role, id}
 	row := u.db.QueryRowContext(ctx, query, args...)
-	return collectRow(row)
+	return collectUserRow(row)
 }
 
 func (u *userRepository) UpdatePassword(id uint64, password string) (*models.Users, error) {
@@ -69,7 +69,7 @@ func (u *userRepository) UpdatePassword(id uint64, password string) (*models.Use
 	defer cancel()
 	args := []interface{}{password, id}
 	row := u.db.QueryRowContext(ctx, query, args...)
-	return collectRow(row)
+	return collectUserRow(row)
 }
 
 func (u *userRepository) Delete(id uint64) error {
@@ -79,13 +79,13 @@ func (u *userRepository) Delete(id uint64) error {
 	return u.db.QueryRowContext(ctx, query, id).Err()
 }
 
-func collectRow(row *sql.Row) (*models.Users, error) {
+func collectUserRow(row *sql.Row) (*models.Users, error) {
 	var user models.Users
 	err := row.Scan(&user.ID, &user.Phone, &user.Password, &user.CreatedAt, &user.Role)
 	return &user, err
 }
 
-func collectRows(rows *sql.Rows) ([]*models.Users, error) {
+func collectUserRows(rows *sql.Rows) ([]*models.Users, error) {
 	var users []*models.Users
 	for rows.Next() {
 		var user models.Users

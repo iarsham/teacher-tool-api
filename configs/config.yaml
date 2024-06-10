@@ -19,3 +19,11 @@ app:
   RefreshHourTTL: 24
   CorsOrigins: [ "*" ]
   CorsMaxAge: 300
+
+s3:
+  AccessKey:
+  SecretKey:
+  BucketName:
+  Endpoint:
+  Region:
+  StorageDomain:

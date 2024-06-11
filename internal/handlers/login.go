@@ -47,7 +47,7 @@ func (a *LoginHandler) LoginHandler(w http.ResponseWriter, r *http.Request) {
 		bindme.WriteJson(w, http.StatusUnprocessableEntity, helpers.M{"error": "wrong password"}, nil)
 		return
 	}
-	accessToken, err := a.Usecase.CreateAccessToken(user.ID, user.Phone)
+	accessToken, err := a.Usecase.CreateAccessToken(user.ID, user.Phone, user.Role)
 	if err != nil {
 		bindme.WriteJson(w, http.StatusInternalServerError, helpers.M{"error": helpers.ErrInternalServer.Error()}, nil)
 		return

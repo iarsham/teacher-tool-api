@@ -48,6 +48,19 @@ func JwtAuthMiddleware(logger *zap.Logger, cfg *configs.Config) func(http.Handle
 			}
 			r = r.WithContext(context.WithValue(r.Context(), "user_id", claims["user_id"]))
 			r = r.WithContext(context.WithValue(r.Context(), "phone", claims["phone"]))
+			r = r.WithContext(context.WithValue(r.Context(), "role", claims["role"]))
+			next.ServeHTTP(w, r)
+		})
+	}
+}
+
+func IsAdminMiddleware() func(http.Handler) http.Handler {
+	return func(next http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			if r.Context().Value("role") != "admin" {
+				bindme.WriteJson(w, http.StatusForbidden, helpers.M{"error": "forbidden, just admin allowed"}, nil)
+				return
+			}
 			next.ServeHTTP(w, r)
 		})
 	}

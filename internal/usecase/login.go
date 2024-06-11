@@ -40,8 +40,8 @@ func (l *loginUsecase) VerifyPass(hashPass, plainPass string) error {
 	return nil
 }
 
-func (l *loginUsecase) CreateAccessToken(userID uint64, phone string) (string, error) {
-	access, err := helpers.CreateAccessToken(userID, phone, l.cfg.App.Secret, l.cfg.App.AccessHourTTL)
+func (l *loginUsecase) CreateAccessToken(userID uint64, phone string, role models.Role) (string, error) {
+	access, err := helpers.CreateAccessToken(userID, phone, role, l.cfg.App.Secret, l.cfg.App.AccessHourTTL)
 	if err != nil {
 		l.logger.Error(err.Error())
 		return "", err

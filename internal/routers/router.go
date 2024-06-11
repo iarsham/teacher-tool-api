@@ -30,11 +30,14 @@ func Routes(db *sql.DB, logger *zap.Logger, cfg *configs.Config) http.Handler {
 	protected := dynamic.Append(
 		middlewares.JwtAuthMiddleware(logger, cfg),
 	)
+	administrator := protected.Append(
+		middlewares.IsAdminMiddleware(),
+	)
 	authGroup := mux.Group("/auth")
 	userGroup := mux.Group("/user")
 	templateGroup := mux.Group("/template")
-	AuthRouter(authGroup, dynamic, db, logger, cfg)
-	UserRouter(userGroup, protected, db, logger)
-	TemplateRouter(templateGroup, protected, db, logger, cfg)
+	authRouter(authGroup, dynamic, db, logger, cfg)
+	userRouter(userGroup, protected, db, logger)
+	templateRouter(templateGroup, administrator, db, logger, cfg)
 	return middlewares.CorsMiddleware(cfg).Handler(mux)
 }

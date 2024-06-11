@@ -2,14 +2,16 @@ package helpers
 
 import (
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/iarsham/teacher-tool-api/internal/models"
 	"time"
 )
 
-func CreateAccessToken(userID uint64, phone string, secretKey string, expire int) (string, error) {
+func CreateAccessToken(userID uint64, phone string, role models.Role, secretKey string, expire int) (string, error) {
 	exp := time.Now().Add(time.Hour * time.Duration(expire)).Unix()
 	claims := jwt.MapClaims{
 		"user_id": userID,
 		"phone":   phone,
+		"role":    role,
 		"exp":     exp,
 	}
 	return jwt.NewWithClaims(jwt.SigningMethodHS256, claims).SignedString([]byte(secretKey))

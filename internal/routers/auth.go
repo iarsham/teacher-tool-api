@@ -10,7 +10,7 @@ import (
 	"go.uber.org/zap"
 )
 
-func AuthRouter(r *multiplexer.Router, chain multiplexer.Chain, db *sql.DB, logger *zap.Logger, cfg *configs.Config) {
+func authRouter(r *multiplexer.Router, chain multiplexer.Chain, db *sql.DB, logger *zap.Logger, cfg *configs.Config) {
 	userRepo := repository.NewUserRepository(db)
 	hr := &handlers.RegisterHandler{
 		Usecase: usecase.NewRegisterUsecase(userRepo, logger),

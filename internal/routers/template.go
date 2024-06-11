@@ -10,7 +10,7 @@ import (
 	"go.uber.org/zap"
 )
 
-func TemplateRouter(r *multiplexer.Router, chain multiplexer.Chain, db *sql.DB, logger *zap.Logger, cfg *configs.Config) {
+func templateRouter(r *multiplexer.Router, chain multiplexer.Chain, db *sql.DB, logger *zap.Logger, cfg *configs.Config) {
 	tmplRepo := repository.NewTemplateRepository(db)
 	ht := &handlers.TemplateHandler{
 		Usecase: usecase.NewTemplateUsecase(tmplRepo, logger, cfg),

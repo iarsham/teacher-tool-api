@@ -7,9 +7,9 @@ import (
 type Role uint64
 
 const (
-	teacher = iota
-	student
-	admin
+	Teacher = iota
+	Student
+	Admin
 )
 
 func (r Role) MarshalJSON() ([]byte, error) {
@@ -19,11 +19,11 @@ func (r Role) MarshalJSON() ([]byte, error) {
 
 func (r Role) String() string {
 	switch r {
-	case teacher:
+	case Teacher:
 		return "teacher"
-	case student:
+	case Student:
 		return "student"
-	case admin:
+	case Admin:
 		return "admin"
 	default:
 		return "unknown"

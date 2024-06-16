@@ -9,6 +9,8 @@ import (
 	"github.com/iarsham/teacher-tool-api/configs"
 	"io"
 	"mime/multipart"
+	"strings"
+	"time"
 )
 
 func UploadAwsS3(cfg *configs.Config, file multipart.File, folder, fileName string) (string, error) {
@@ -24,7 +26,7 @@ func UploadAwsS3(cfg *configs.Config, file multipart.File, folder, fileName stri
 	})
 	s3Config.BaseEndpoint = aws.String(cfg.S3.Endpoint)
 	client := s3.NewFromConfig(s3Config)
-	dst := folder + "/" + fileName
+	dst := DstPath(folder, fileName)
 	fileBytes, err := io.ReadAll(file)
 	if err != nil {
 		return "", err
@@ -37,5 +39,15 @@ func UploadAwsS3(cfg *configs.Config, file multipart.File, folder, fileName stri
 	if err != nil {
 		return "", err
 	}
-	return cfg.S3.StorageDomain + "/" + dst, nil
+	return CreateS3Url(cfg, dst), nil
+}
+
+func CreateS3Url(cfg *configs.Config, fileName string) string {
+	return cfg.S3.StorageDomain + "/" + fileName
+}
+
+func DstPath(folder, fileName string) string {
+	name := strings.Split(fileName, ".")
+	timeNow := time.Now().Format("2006-01-02")
+	return folder + "/" + strings.ReplaceAll(name[0], " ", "") + "-" + timeNow + "." + name[1]
 }

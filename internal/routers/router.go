@@ -36,8 +36,10 @@ func Routes(db *sql.DB, logger *zap.Logger, cfg *configs.Config) http.Handler {
 	authGroup := mux.Group("/auth")
 	userGroup := mux.Group("/user")
 	templateGroup := mux.Group("/template")
+	questionGroup := mux.Group("/question")
 	authRouter(authGroup, dynamic, db, logger, cfg)
 	userRouter(userGroup, protected, db, logger)
 	templateRouter(templateGroup, administrator, db, logger, cfg)
+	questionsRouter(questionGroup, administrator, db, logger, cfg)
 	return middlewares.CorsMiddleware(cfg).Handler(mux)
 }

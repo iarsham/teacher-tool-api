@@ -12,11 +12,6 @@ const (
 	Admin
 )
 
-func (r Role) MarshalJSON() ([]byte, error) {
-	quotedValue := strconv.Quote(r.String())
-	return []byte(quotedValue), nil
-}
-
 func (r Role) String() string {
 	switch r {
 	case Teacher:
@@ -28,4 +23,9 @@ func (r Role) String() string {
 	default:
 		return "unknown"
 	}
+}
+
+func (r Role) MarshalJSON() ([]byte, error) {
+	quotedValue := strconv.Quote(r.String())
+	return []byte(quotedValue), nil
 }

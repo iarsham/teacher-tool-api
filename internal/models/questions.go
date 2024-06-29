@@ -3,7 +3,7 @@ package models
 import "time"
 
 type Questions struct {
-	ID        uint64    `json:"id" example:"1"`
+	ID        uint64    `json:"id"`
 	Lesson    string    `json:"lesson"`
 	Title     string    `json:"title"`
 	Grade     Grade     `json:"grade"`

@@ -22,7 +22,6 @@ func Routes(db *sql.DB, logger *zap.Logger, cfg *configs.Config) http.Handler {
 	))
 	mux.NotFound = http.HandlerFunc(handlers.NotFoundHandler)
 	mux.MethodNotAllowed = http.HandlerFunc(handlers.HttpMethodHandler)
-	mux.HandleFunc("GET /healthcheck", handlers.HealthCheckHandler)
 	dynamic := multiplexer.NewChain(
 		middlewares.LoggerMiddleware(logger),
 		middlewares.RecoveryMiddleware(logger),

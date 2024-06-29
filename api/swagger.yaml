@@ -18,6 +18,8 @@ definitions:
     type: object
   github_com_iarsham_teacher-tool-api_internal_entities.QuestionRequest:
     properties:
+      file:
+        $ref: '#/definitions/multipart.FileHeader'
       grade:
         enum:
         - 0
@@ -26,16 +28,20 @@ definitions:
         - 3
         - 4
         - 5
+        example: 5
         type: integer
       lesson:
+        example: 1
         type: integer
       level:
         enum:
         - 0
         - 1
         - 2
+        example: 2
         type: integer
       title:
+        example: Math Stuff
         type: string
     required:
     - grade
@@ -84,30 +90,6 @@ definitions:
     - password
     - phone
     type: object
-  github_com_iarsham_teacher-tool-api_internal_models.Questions:
-    properties:
-      created_at:
-        type: string
-      file:
-        type: string
-      grade:
-        type: integer
-      id:
-        example: 1
-        type: integer
-      lesson:
-        type: string
-      level:
-        type: integer
-      title:
-        type: string
-      used:
-        type: integer
-      user_id:
-        type: integer
-      views:
-        type: integer
-    type: object
   github_com_iarsham_teacher-tool-api_internal_models.Templates:
     properties:
       created_at:
@@ -136,12 +118,6 @@ definitions:
     properties:
       error:
         example: bad request
-        type: string
-    type: object
-  response.HealthCheck:
-    properties:
-      status:
-        example: available
         type: string
     type: object
   response.InternalServerError:
@@ -179,26 +155,35 @@ definitions:
     type: object
   response.QuestionData:
     properties:
-      created_at:
+      createdAt:
+        example: "2024-01-29T03:09:00+03:30"
         type: string
       file:
+        example: domain.com/media/image.png
         type: string
       grade:
-        type: integer
+        example: fifth
+        type: string
       id:
         example: 1
         type: integer
       lesson:
+        example: "12"
         type: string
       level:
-        type: integer
+        example: advanced
+        type: string
       title:
+        example: Math statistics
         type: string
       used:
+        example: 195
         type: integer
-      user_id:
+      userID:
+        example: 10
         type: integer
       views:
+        example: 666
         type: integer
     type: object
   response.QuestionNotFound:
@@ -257,6 +242,39 @@ definitions:
       error:
         example: wrong password
         type: string
+    type: object
+  response.questionResponse:
+    properties:
+      createdAt:
+        example: "2024-01-29T03:09:00+03:30"
+        type: string
+      file:
+        example: domain.com/media/image.png
+        type: string
+      grade:
+        example: fifth
+        type: string
+      id:
+        example: 1
+        type: integer
+      lesson:
+        example: "12"
+        type: string
+      level:
+        example: advanced
+        type: string
+      title:
+        example: Math statistics
+        type: string
+      used:
+        example: 195
+        type: integer
+      userID:
+        example: 10
+        type: integer
+      views:
+        example: 666
+        type: integer
     type: object
   textproto.MIMEHeader:
     additionalProperties:
@@ -350,20 +368,6 @@ paths:
       summary: Register
       tags:
       - Auth
-  /healthcheck:
-    get:
-      consumes:
-      - application/json
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/response.HealthCheck'
-      summary: Health check
-      tags:
-      - Server
   /question:
     get:
       consumes:
@@ -376,7 +380,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/github_com_iarsham_teacher-tool-api_internal_models.Questions'
+              $ref: '#/definitions/response.questionResponse'
             type: array
         "500":
           description: Internal Server Error

@@ -134,28 +134,6 @@ const docTemplate = `{
                 }
             }
         },
-        "/healthcheck": {
-            "get": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Server"
-                ],
-                "summary": "Health check",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/response.HealthCheck"
-                        }
-                    }
-                }
-            }
-        },
         "/question": {
             "get": {
                 "description": "Get all questions handled by teacher",
@@ -175,7 +153,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/github_com_iarsham_teacher-tool-api_internal_models.Questions"
+                                "$ref": "#/definitions/response.questionResponse"
                             }
                         }
                     },
@@ -619,6 +597,9 @@ const docTemplate = `{
                 "title"
             ],
             "properties": {
+                "file": {
+                    "$ref": "#/definitions/multipart.FileHeader"
+                },
                 "grade": {
                     "type": "integer",
                     "enum": [
@@ -628,10 +609,12 @@ const docTemplate = `{
                         3,
                         4,
                         5
-                    ]
+                    ],
+                    "example": 5
                 },
                 "lesson": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 1
                 },
                 "level": {
                     "type": "integer",
@@ -639,10 +622,12 @@ const docTemplate = `{
                         0,
                         1,
                         2
-                    ]
+                    ],
+                    "example": 2
                 },
                 "title": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "Math Stuff"
                 }
             }
         },
@@ -703,42 +688,6 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_iarsham_teacher-tool-api_internal_models.Questions": {
-            "type": "object",
-            "properties": {
-                "created_at": {
-                    "type": "string"
-                },
-                "file": {
-                    "type": "string"
-                },
-                "grade": {
-                    "type": "integer"
-                },
-                "id": {
-                    "type": "integer",
-                    "example": 1
-                },
-                "lesson": {
-                    "type": "string"
-                },
-                "level": {
-                    "type": "integer"
-                },
-                "title": {
-                    "type": "string"
-                },
-                "used": {
-                    "type": "integer"
-                },
-                "user_id": {
-                    "type": "integer"
-                },
-                "views": {
-                    "type": "integer"
-                }
-            }
-        },
         "github_com_iarsham_teacher-tool-api_internal_models.Templates": {
             "type": "object",
             "properties": {
@@ -780,15 +729,6 @@ const docTemplate = `{
                 "error": {
                     "type": "string",
                     "example": "bad request"
-                }
-            }
-        },
-        "response.HealthCheck": {
-            "type": "object",
-            "properties": {
-                "status": {
-                    "type": "string",
-                    "example": "available"
                 }
             }
         },
@@ -844,36 +784,45 @@ const docTemplate = `{
         "response.QuestionData": {
             "type": "object",
             "properties": {
-                "created_at": {
-                    "type": "string"
+                "createdAt": {
+                    "type": "string",
+                    "example": "2024-01-29T03:09:00+03:30"
                 },
                 "file": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "domain.com/media/image.png"
                 },
                 "grade": {
-                    "type": "integer"
+                    "type": "string",
+                    "example": "fifth"
                 },
                 "id": {
                     "type": "integer",
                     "example": 1
                 },
                 "lesson": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "12"
                 },
                 "level": {
-                    "type": "integer"
+                    "type": "string",
+                    "example": "advanced"
                 },
                 "title": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "Math statistics"
                 },
                 "used": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 195
                 },
-                "user_id": {
-                    "type": "integer"
+                "userID": {
+                    "type": "integer",
+                    "example": 10
                 },
                 "views": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 666
                 }
             }
         },
@@ -958,6 +907,51 @@ const docTemplate = `{
                 "error": {
                     "type": "string",
                     "example": "wrong password"
+                }
+            }
+        },
+        "response.questionResponse": {
+            "type": "object",
+            "properties": {
+                "createdAt": {
+                    "type": "string",
+                    "example": "2024-01-29T03:09:00+03:30"
+                },
+                "file": {
+                    "type": "string",
+                    "example": "domain.com/media/image.png"
+                },
+                "grade": {
+                    "type": "string",
+                    "example": "fifth"
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "lesson": {
+                    "type": "string",
+                    "example": "12"
+                },
+                "level": {
+                    "type": "string",
+                    "example": "advanced"
+                },
+                "title": {
+                    "type": "string",
+                    "example": "Math statistics"
+                },
+                "used": {
+                    "type": "integer",
+                    "example": 195
+                },
+                "userID": {
+                    "type": "integer",
+                    "example": 10
+                },
+                "views": {
+                    "type": "integer",
+                    "example": 666
                 }
             }
         },

@@ -1,0 +1,24 @@
+# Exclude common files and directories
+.git
+.vscode
+../../../../../Projects/teacher-tool-api/.idea
+*.log
+*.out
+.env
+.env-sample
+.gitignore
+README.md
+# Exclude Go build artifacts
+*.exe
+*.test
+*.prof
+
+
+# Exclude vendor directory
+vendor/
+
+# Exclude Docker-related files
+.dockerignore
+Dockerfile
+docker-compose.yml
+docker-compose-dev.yaml

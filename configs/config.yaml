@@ -1,17 +1,17 @@
 postgres:
-  host: localhost
+  host: db
   port: 5432
   username: user
   password: pass
-  db: shop
+  db: teacher
   MaxOpenConns: 25
   MaxIdleConns: 25
   ConnMaxIdleTime: 15m
 
 app:
   host: 0.0.0.0
-  port: 8080
-  addr: :8080
+  port: 8000
+  addr: :8000
   debug: false
   baseAPI: /api/v1
   secret: secret123!@#

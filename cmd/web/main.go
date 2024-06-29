@@ -21,7 +21,6 @@ import (
 // @contact.email	arshamdev2001@gmail.com
 // @license.name	MIT
 // @license.url	https://www.mit.edu/~amini/LICENSE.md
-// @host			localhost:8080
 // @BasePath		/api/v1
 func main() {
 	debug := flag.Bool("debug", true, "debug mode")

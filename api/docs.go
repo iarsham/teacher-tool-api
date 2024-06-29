@@ -156,6 +156,177 @@ const docTemplate = `{
                 }
             }
         },
+        "/question": {
+            "get": {
+                "description": "Get all questions handled by teacher",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Questions"
+                ],
+                "summary": "Get All Questions",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/github_com_iarsham_teacher-tool-api_internal_models.Questions"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.InternalServerError"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create a new question",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Questions"
+                ],
+                "summary": "Create Question",
+                "parameters": [
+                    {
+                        "description": "Question data",
+                        "name": "questionRequest",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_iarsham_teacher-tool-api_internal_entities.QuestionRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.QuestionCreated"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.BadRequest"
+                        }
+                    },
+                    "408": {
+                        "description": "Request Timeout",
+                        "schema": {
+                            "$ref": "#/definitions/response.QuestionAlreadyExists"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.InternalServerError"
+                        }
+                    }
+                }
+            }
+        },
+        "/question/:id": {
+            "get": {
+                "description": "Get single question with id",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Questions"
+                ],
+                "summary": "Get Question",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Question ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.QuestionData"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.BadRequest"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/response.QuestionNotFound"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.InternalServerError"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Delete question with id",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Questions"
+                ],
+                "summary": "Delete Question",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Question ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.BadRequest"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.InternalServerError"
+                        }
+                    }
+                }
+            }
+        },
         "/template": {
             "get": {
                 "description": "Get all templates",
@@ -439,6 +610,42 @@ const docTemplate = `{
                 }
             }
         },
+        "github_com_iarsham_teacher-tool-api_internal_entities.QuestionRequest": {
+            "type": "object",
+            "required": [
+                "grade",
+                "lesson",
+                "level",
+                "title"
+            ],
+            "properties": {
+                "grade": {
+                    "type": "integer",
+                    "enum": [
+                        0,
+                        1,
+                        2,
+                        3,
+                        4,
+                        5
+                    ]
+                },
+                "lesson": {
+                    "type": "integer"
+                },
+                "level": {
+                    "type": "integer",
+                    "enum": [
+                        0,
+                        1,
+                        2
+                    ]
+                },
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
         "github_com_iarsham_teacher-tool-api_internal_entities.TemplateRequest": {
             "type": "object",
             "required": [
@@ -493,6 +700,42 @@ const docTemplate = `{
                     "maxLength": 15,
                     "minLength": 10,
                     "example": "+9891154326250"
+                }
+            }
+        },
+        "github_com_iarsham_teacher-tool-api_internal_models.Questions": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "file": {
+                    "type": "string"
+                },
+                "grade": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "lesson": {
+                    "type": "string"
+                },
+                "level": {
+                    "type": "integer"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "used": {
+                    "type": "integer"
+                },
+                "user_id": {
+                    "type": "integer"
+                },
+                "views": {
+                    "type": "integer"
                 }
             }
         },
@@ -577,6 +820,69 @@ const docTemplate = `{
                 "response": {
                     "type": "string",
                     "example": "password changed successfully"
+                }
+            }
+        },
+        "response.QuestionAlreadyExists": {
+            "type": "object",
+            "properties": {
+                "error": {
+                    "type": "string",
+                    "example": "question already exists"
+                }
+            }
+        },
+        "response.QuestionCreated": {
+            "type": "object",
+            "properties": {
+                "response": {
+                    "type": "string",
+                    "example": "question created"
+                }
+            }
+        },
+        "response.QuestionData": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "file": {
+                    "type": "string"
+                },
+                "grade": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "lesson": {
+                    "type": "string"
+                },
+                "level": {
+                    "type": "integer"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "used": {
+                    "type": "integer"
+                },
+                "user_id": {
+                    "type": "integer"
+                },
+                "views": {
+                    "type": "integer"
+                }
+            }
+        },
+        "response.QuestionNotFound": {
+            "type": "object",
+            "properties": {
+                "error": {
+                    "type": "string",
+                    "example": "question not found"
                 }
             }
         },
@@ -670,7 +976,7 @@ const docTemplate = `{
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
 	Version:          "0.0.0",
-	Host:             "localhost:8080",
+	Host:             "",
 	BasePath:         "/api/v1",
 	Schemes:          []string{},
 	Title:            "Teacher-Tools-API",

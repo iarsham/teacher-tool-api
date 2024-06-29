@@ -50,3 +50,19 @@ type TemplateCreated struct {
 type TemplateExists struct {
 	Error string `example:"template already exists"`
 }
+
+type AllQuestions []models.Questions
+
+type QuestionNotFound struct {
+	Error string `example:"question not found"`
+}
+
+type QuestionData models.Questions
+
+type QuestionAlreadyExists struct {
+	Error string `example:"question already exists"`
+}
+
+type QuestionCreated struct {
+	Response string `example:"question created"`
+}

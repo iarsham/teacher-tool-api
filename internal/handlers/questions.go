@@ -17,6 +17,16 @@ type QuestionHandler struct {
 	Usecase domain.QuestionsUsecase
 }
 
+// GetAllQuestionsHandler godoc
+//
+//	@Summary		Get All Questions
+//	@Description	Get all questions handled by teacher
+//	@Accept			json
+//	@Produce		json
+//	@Tags			Questions
+//	@Success		200	{object}	response.AllQuestions
+//	@Failure		500	{object}	response.InternalServerError
+//	@router			/question [get]
 func (q *QuestionHandler) GetAllQuestionsHandler(w http.ResponseWriter, r *http.Request) {
 	questions, err := q.Usecase.FindAll()
 	if err != nil {
@@ -26,6 +36,19 @@ func (q *QuestionHandler) GetAllQuestionsHandler(w http.ResponseWriter, r *http.
 	bindme.WriteJson(w, http.StatusOK, questions, nil)
 }
 
+// GetQuestionHandler godoc
+//
+//	@Summary		Get Question
+//	@Description	Get single question with id
+//	@Accept			json
+//	@Produce		json
+//	@Tags			Questions
+//	@Param			id	path		int	true	"Question ID"
+//	@Success		200	{object}	response.QuestionData
+//	@Failure		400	{object}	response.BadRequest
+//	@Failure		404	{object}	response.QuestionNotFound
+//	@Failure		500	{object}	response.InternalServerError
+//	@router			/question/:id [get]
 func (q *QuestionHandler) GetQuestionHandler(w http.ResponseWriter, r *http.Request) {
 	id, err := q.Usecase.GetObjID(r)
 	if err != nil {
@@ -45,6 +68,19 @@ func (q *QuestionHandler) GetQuestionHandler(w http.ResponseWriter, r *http.Requ
 	bindme.WriteJson(w, http.StatusOK, helpers.M{"response": question}, nil)
 }
 
+// CreateQuestionHandler godoc
+//
+//	@Summary		Create Question
+//	@Description	Create a new question
+//	@Accept			multipart/form-data
+//	@Produce		json
+//	@Tags			Questions
+//	@Param			questionRequest	body		entities.QuestionRequest	true	"Question data"
+//	@Success		200				{object}	response.QuestionCreated
+//	@Failure		400				{object}	response.BadRequest
+//	@Failure		408				{object}	response.QuestionAlreadyExists
+//	@Failure		500				{object}	response.InternalServerError
+//	@router			/question [post]
 func (q *QuestionHandler) CreateQuestionHandler(w http.ResponseWriter, r *http.Request) {
 	userID := q.Usecase.GetUserID(r)
 	question := new(entities.QuestionRequest)
@@ -68,6 +104,18 @@ func (q *QuestionHandler) CreateQuestionHandler(w http.ResponseWriter, r *http.R
 	bindme.WriteJson(w, http.StatusCreated, helpers.M{"response": "question created"}, nil)
 }
 
+// DeleteQuestionHandler godoc
+//
+//	@Summary		Delete Question
+//	@Description	Delete question with id
+//	@Accept			json
+//	@Produce		json
+//	@Tags			Questions
+//	@Param			id	path		int	true	"Question ID"
+//	@Success		204	{object}	nil
+//	@Failure		400	{object}	response.BadRequest
+//	@Failure		500	{object}	response.InternalServerError
+//	@router			/question/:id [delete]
 func (q *QuestionHandler) DeleteQuestionHandler(w http.ResponseWriter, r *http.Request) {
 	id, err := q.Usecase.GetObjID(r)
 	if err != nil {

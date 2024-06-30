@@ -18,6 +18,10 @@ func authRouter(r *multiplexer.Router, chain multiplexer.Chain, db *sql.DB, logg
 	hl := &handlers.LoginHandler{
 		Usecase: usecase.NewLoginUsecase(userRepo, logger, cfg),
 	}
+	ht := &handlers.RefreshHandler{
+		Usecase: usecase.NewRefreshTokenUsecase(userRepo, logger, cfg),
+	}
 	r.Handle("POST /register", chain.WrapFunc(hr.RegisterHandler))
 	r.Handle("POST /login", chain.WrapFunc(hl.LoginHandler))
+	r.Handle("POST /refresh-token", chain.WrapFunc(ht.RefreshTokenHandler))
 }

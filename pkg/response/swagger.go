@@ -82,3 +82,7 @@ type questionResponse struct {
 	UserID    uint64    `example:"10"`
 	CreatedAt time.Time `example:"2024-01-29T03:09:00+03:30"`
 }
+
+type RefreshSuccess struct {
+	AccessToken string `json:"access_token" example:"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"`
+}

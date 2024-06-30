@@ -49,6 +49,14 @@ definitions:
     - level
     - title
     type: object
+  github_com_iarsham_teacher-tool-api_internal_entities.RefreshTokenRequest:
+    properties:
+      refresh_token:
+        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+        type: string
+    required:
+    - refresh_token
+    type: object
   github_com_iarsham_teacher-tool-api_internal_entities.TemplateRequest:
     properties:
       file:
@@ -192,6 +200,12 @@ definitions:
         example: question not found
         type: string
     type: object
+  response.RefreshSuccess:
+    properties:
+      access_token:
+        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+        type: string
+    type: object
   response.TemplateCreated:
     properties:
       response:
@@ -332,6 +346,36 @@ paths:
           schema:
             $ref: '#/definitions/response.InternalServerError'
       summary: Login
+      tags:
+      - Auth
+  /auth/refresh-token:
+    post:
+      consumes:
+      - application/json
+      description: Refresh token endpoint to get new access token with refresh token
+      parameters:
+      - description: Token data
+        in: body
+        name: tokenRequest
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_iarsham_teacher-tool-api_internal_entities.RefreshTokenRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.RefreshSuccess'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.BadRequest'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.InternalServerError'
+      summary: Refresh token
       tags:
       - Auth
   /auth/register:

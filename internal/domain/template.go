@@ -9,14 +9,17 @@ import (
 
 type TemplateRepository interface {
 	FindAll() ([]*models.Templates, error)
-	Create(template *entities.TemplateRequest) (*models.Templates, error)
+	Create(template *entities.TemplateRequest, link string) (*models.Templates, error)
+	FindByFile(link string) (*models.Templates, error)
 	Delete(templateID uint64) error
 }
 
 type TemplateUsecase interface {
 	GetObjID(r *http.Request) (uint64, error)
+	GetUserID(r *http.Request) uint64
 	FindAll() ([]*models.Templates, error)
-	Create(template *entities.TemplateRequest, userID uint64) (*models.Templates, error)
+	FindByFile(file *multipart.FileHeader) (*models.Templates, error)
+	Create(template *entities.TemplateRequest, link string) (*models.Templates, error)
 	Delete(templateID uint64) error
 	UploadFile(file multipart.File, folder, fileName string) (string, error)
 }

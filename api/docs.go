@@ -691,15 +691,9 @@ const docTemplate = `{
         },
         "github_com_iarsham_teacher-tool-api_internal_entities.TemplateRequest": {
             "type": "object",
-            "required": [
-                "file"
-            ],
             "properties": {
                 "file": {
                     "$ref": "#/definitions/multipart.FileHeader"
-                },
-                "userID": {
-                    "type": "integer"
                 }
             }
         },

@@ -26,7 +26,7 @@ func UploadAwsS3(cfg *configs.Config, file multipart.File, folder, fileName stri
 	})
 	s3Config.BaseEndpoint = aws.String(cfg.S3.Endpoint)
 	client := s3.NewFromConfig(s3Config)
-	dst := DstPath(folder, fileName)
+	dst := DstNewFile(folder, fileName)
 	fileBytes, err := io.ReadAll(file)
 	if err != nil {
 		return "", err
@@ -46,7 +46,7 @@ func CreateS3Url(cfg *configs.Config, fileName string) string {
 	return cfg.S3.StorageDomain + "/" + fileName
 }
 
-func DstPath(folder, fileName string) string {
+func DstNewFile(folder, fileName string) string {
 	name := strings.Split(fileName, ".")
 	timeNow := time.Now().Format("2006-01-02")
 	return folder + "/" + strings.ReplaceAll(name[0], " ", "") + "-" + timeNow + "." + name[1]

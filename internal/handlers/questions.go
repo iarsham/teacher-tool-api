@@ -82,8 +82,8 @@ func (q *QuestionHandler) GetQuestionHandler(w http.ResponseWriter, r *http.Requ
 //	@Failure		500				{object}	response.InternalServerError
 //	@router			/question [post]
 func (q *QuestionHandler) CreateQuestionHandler(w http.ResponseWriter, r *http.Request) {
-	userID := q.Usecase.GetUserID(r)
 	question := new(entities.QuestionRequest)
+	question.UserID = q.Usecase.GetUserID(r)
 	file, handler, err := bindme.ReadFile(r, "file", maxFileSize)
 	if err != nil {
 		bindme.WriteJson(w, http.StatusBadRequest, helpers.M{"error": err.Error()}, nil)
@@ -99,7 +99,7 @@ func (q *QuestionHandler) CreateQuestionHandler(w http.ResponseWriter, r *http.R
 	}
 	helpers.Background(func() {
 		link, _ := q.Usecase.UploadFile(file, "questions", handler.Filename)
-		q.Usecase.Create(question, link, userID)
+		q.Usecase.Create(question, link)
 	})
 	bindme.WriteJson(w, http.StatusCreated, helpers.M{"response": "question created"}, nil)
 }

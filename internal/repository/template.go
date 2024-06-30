@@ -31,11 +31,19 @@ func (t *templateRepository) FindAll() ([]*models.Templates, error) {
 	return collectTemplateRows(rows)
 }
 
-func (t *templateRepository) Create(template *entities.TemplateRequest) (*models.Templates, error) {
+func (t *templateRepository) FindByFile(link string) (*models.Templates, error) {
+	query := `SELECT * FROM template WHERE file = $1`
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+	row := t.db.QueryRowContext(ctx, query, link)
+	return collectTemplateRow(row)
+}
+
+func (t *templateRepository) Create(template *entities.TemplateRequest, link string) (*models.Templates, error) {
 	query := `INSERT INTO template (userid, file) VALUES ($1,$2) RETURNING *`
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
-	args := []interface{}{template.UserID, template.File.Filename}
+	args := []interface{}{template.UserID, link}
 	row := t.db.QueryRowContext(ctx, query, args...)
 	return collectTemplateRow(row)
 }

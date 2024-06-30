@@ -1,7 +1,6 @@
 package usecase
 
 import (
-	"fmt"
 	"github.com/iarsham/teacher-tool-api/configs"
 	"github.com/iarsham/teacher-tool-api/internal/domain"
 	"github.com/iarsham/teacher-tool-api/internal/entities"
@@ -35,9 +34,8 @@ func (q *questionsUsecase) FindAll() ([]*models.Questions, error) {
 	return qs, nil
 }
 func (q *questionsUsecase) FindByFile(file *multipart.FileHeader) (*models.Questions, error) {
-	path := helpers.DstPath("questions", file.Filename)
+	path := helpers.DstNewFile("questions", file.Filename)
 	link := helpers.CreateS3Url(q.cfg, path)
-	fmt.Println(link)
 	qs, err := q.questionsRepository.FindByFile(link)
 	if err != nil {
 		q.logger.Error(err.Error())
@@ -68,8 +66,8 @@ func (q *questionsUsecase) GetUserID(r *http.Request) uint64 {
 	return helpers.GetUserID(r)
 }
 
-func (q *questionsUsecase) Create(question *entities.QuestionRequest, link string, userID uint64) (*models.Questions, error) {
-	qs, err := q.questionsRepository.Create(question, link, userID)
+func (q *questionsUsecase) Create(question *entities.QuestionRequest, link string) (*models.Questions, error) {
+	qs, err := q.questionsRepository.Create(question, link)
 	if err != nil {
 		q.logger.Error(err.Error())
 		return nil, err

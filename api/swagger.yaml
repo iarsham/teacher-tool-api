@@ -61,10 +61,6 @@ definitions:
     properties:
       file:
         $ref: '#/definitions/multipart.FileHeader'
-      userID:
-        type: integer
-    required:
-    - file
     type: object
   github_com_iarsham_teacher-tool-api_internal_entities.UpdateUserRequest:
     properties:

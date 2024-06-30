@@ -34,6 +34,10 @@ func (t *templateUsecase) GetObjID(r *http.Request) (uint64, error) {
 	return id, err
 }
 
+func (t *templateUsecase) GetUserID(r *http.Request) uint64 {
+	return helpers.GetUserID(r)
+}
+
 func (t *templateUsecase) FindAll() ([]*models.Templates, error) {
 	templates, err := t.templateRepository.FindAll()
 	if err != nil {
@@ -42,10 +46,19 @@ func (t *templateUsecase) FindAll() ([]*models.Templates, error) {
 	}
 	return templates, nil
 }
+func (t *templateUsecase) FindByFile(file *multipart.FileHeader) (*models.Templates, error) {
+	path := helpers.DstNewFile("templates", file.Filename)
+	link := helpers.CreateS3Url(t.cfg, path)
+	tmpl, err := t.templateRepository.FindByFile(link)
+	if err != nil {
+		t.logger.Error(err.Error())
+		return nil, err
+	}
+	return tmpl, nil
+}
 
-func (t *templateUsecase) Create(template *entities.TemplateRequest, userID uint64) (*models.Templates, error) {
-	template.UserID = userID
-	tmpl, err := t.templateRepository.Create(template)
+func (t *templateUsecase) Create(template *entities.TemplateRequest, link string) (*models.Templates, error) {
+	tmpl, err := t.templateRepository.Create(template, link)
 	if err != nil {
 		t.logger.Error(err.Error())
 		return nil, err

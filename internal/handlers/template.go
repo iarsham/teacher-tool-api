@@ -47,37 +47,20 @@ func (t *TemplateHandler) GetAllTemplatesHandler(w http.ResponseWriter, r *http.
 //	@router			/template [post]
 func (t *TemplateHandler) CreateTemplateHandler(w http.ResponseWriter, r *http.Request) {
 	data := new(entities.TemplateRequest)
-	userID := helpers.GetUserID(r)
-	if err := r.ParseMultipartForm(10 << 20); err != nil {
+	data.UserID = t.Usecase.GetUserID(r)
+	file, handler, err := bindme.ReadFile(r, "file", maxFileSize)
+	if err != nil {
 		bindme.WriteJson(w, http.StatusBadRequest, helpers.M{"error": err.Error()}, nil)
 		return
 	}
-	file, handler, err := r.FormFile("file")
-	data.File = handler
-	if err != nil {
-		switch {
-		case errors.Is(err, http.ErrMissingFile):
-			bindme.WriteJson(w, http.StatusBadRequest, helpers.M{"error": "missing file in request"}, nil)
-			return
-		default:
-			bindme.WriteJson(w, http.StatusInternalServerError, helpers.M{"error": helpers.ErrInternalServer.Error()}, nil)
-			return
-		}
+	if _, err := t.Usecase.FindByFile(handler); !errors.Is(err, sql.ErrNoRows) {
+		bindme.WriteJson(w, http.StatusConflict, helpers.M{"error": "template already exists"}, nil)
+		return
 	}
-	defer file.Close()
 	helpers.Background(func() {
-		t.Usecase.UploadFile(file, "templates", handler.Filename)
+		link, _ := t.Usecase.UploadFile(file, "templates", handler.Filename)
+		t.Usecase.Create(data, link)
 	})
-	if _, err := t.Usecase.Create(data, userID); err != nil {
-		switch {
-		case !errors.Is(err, sql.ErrNoRows):
-			bindme.WriteJson(w, http.StatusConflict, helpers.M{"error": "template already exists"}, nil)
-			return
-		default:
-			bindme.WriteJson(w, http.StatusInternalServerError, helpers.M{"error": helpers.ErrInternalServer.Error()}, nil)
-			return
-		}
-	}
 	bindme.WriteJson(w, http.StatusCreated, helpers.M{"response": "template created"}, nil)
 }
 

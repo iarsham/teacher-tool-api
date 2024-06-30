@@ -8,4 +8,5 @@ type QuestionRequest struct {
 	Grade  uint64 `form:"grade" validate:"required,oneof=0 1 2 3 4 5" example:"5"`
 	Level  uint64 `form:"level" validate:"required,oneof=0 1 2" example:"2"`
 	File   multipart.FileHeader
+	UserID uint64 `swaggerignore:"true"`
 }

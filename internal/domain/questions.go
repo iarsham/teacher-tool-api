@@ -11,7 +11,7 @@ type QuestionsRepository interface {
 	FindAll() ([]*models.Questions, error)
 	FindByFile(link string) (*models.Questions, error)
 	FindByID(id uint64) (*models.Questions, error)
-	Create(question *entities.QuestionRequest, link string, userID uint64) (*models.Questions, error)
+	Create(question *entities.QuestionRequest, link string) (*models.Questions, error)
 	Delete(id uint64) error
 }
 
@@ -21,7 +21,7 @@ type QuestionsUsecase interface {
 	FindAll() ([]*models.Questions, error)
 	FindByFile(file *multipart.FileHeader) (*models.Questions, error)
 	FindByID(id uint64) (*models.Questions, error)
-	Create(question *entities.QuestionRequest, link string, userID uint64) (*models.Questions, error)
+	Create(question *entities.QuestionRequest, link string) (*models.Questions, error)
 	Delete(id uint64) error
 	UploadFile(file multipart.File, folder, fileName string) (string, error)
 }

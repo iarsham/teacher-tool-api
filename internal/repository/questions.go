@@ -47,11 +47,11 @@ func (q *questionsRepository) FindByID(id uint64) (*models.Questions, error) {
 	return collectQuestionRow(row)
 }
 
-func (q *questionsRepository) Create(question *entities.QuestionRequest, link string, userID uint64) (*models.Questions, error) {
+func (q *questionsRepository) Create(question *entities.QuestionRequest, link string) (*models.Questions, error) {
 	query := `INSERT INTO questions (lesson, title, grade, level, file, userid) VALUES ($1,$2,$3,$4,$5,$6) RETURNING *`
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
-	args := []interface{}{question.Lesson, question.Title, question.Grade, question.Level, link, userID}
+	args := []interface{}{question.Lesson, question.Title, question.Grade, question.Level, link, question.UserID}
 	row := q.db.QueryRowContext(ctx, query, args...)
 	return collectQuestionRow(row)
 }

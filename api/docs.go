@@ -193,6 +193,20 @@ const docTemplate = `{
                     "Questions"
                 ],
                 "summary": "Get All Questions",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Page number",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Page size",
+                        "name": "page_size",
+                        "in": "query"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -201,6 +215,12 @@ const docTemplate = `{
                             "items": {
                                 "$ref": "#/definitions/response.questionResponse"
                             }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.BadRequest"
                         }
                     },
                     "500": {

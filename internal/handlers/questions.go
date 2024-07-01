@@ -24,16 +24,28 @@ type QuestionHandler struct {
 //	@Accept			json
 //	@Produce		json
 //	@Tags			Questions
+//	@Param			page		query		int		false	"Page number"
+//	@Param			page_size	query		int		false	"Page size"
 //	@Success		200	{object}	response.AllQuestions
+//	@Success		400	{object}	response.BadRequest
 //	@Failure		500	{object}	response.InternalServerError
 //	@router			/question [get]
 func (q *QuestionHandler) GetAllQuestionsHandler(w http.ResponseWriter, r *http.Request) {
-	questions, err := q.Usecase.FindAll()
+	var filter helpers.PaginateFilter
+	v := bindme.New()
+	qs := r.URL.Query()
+	filter.Page = v.ReadInt(qs, "page", 1)
+	filter.PageSize = v.ReadInt(qs, "page_size", 10)
+	if filter.Validate(v); !v.IsValid() {
+		bindme.WriteJson(w, http.StatusBadRequest, helpers.M{"error": v.Errors}, nil)
+		return
+	}
+	questions, metaData, err := q.Usecase.FindAll(filter.Limit(), filter.OffSet())
 	if err != nil {
 		bindme.WriteJson(w, http.StatusInternalServerError, helpers.M{"error": helpers.ErrInternalServer.Error()}, nil)
 		return
 	}
-	bindme.WriteJson(w, http.StatusOK, questions, nil)
+	bindme.WriteJson(w, http.StatusOK, helpers.M{"metadata": metaData, "questions": questions}, nil)
 }
 
 // GetQuestionHandler godoc

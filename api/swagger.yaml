@@ -413,6 +413,15 @@ paths:
       consumes:
       - application/json
       description: Get all questions handled by teacher
+      parameters:
+      - description: Page number
+        in: query
+        name: page
+        type: integer
+      - description: Page size
+        in: query
+        name: page_size
+        type: integer
       produces:
       - application/json
       responses:
@@ -422,6 +431,10 @@ paths:
             items:
               $ref: '#/definitions/response.questionResponse'
             type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.BadRequest'
         "500":
           description: Internal Server Error
           schema:

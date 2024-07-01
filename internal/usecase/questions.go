@@ -25,13 +25,13 @@ func NewQuestionsUsecase(questionsRepository domain.QuestionsRepository, logger 
 	}
 }
 
-func (q *questionsUsecase) FindAll() ([]*models.Questions, error) {
-	qs, err := q.questionsRepository.FindAll()
+func (q *questionsUsecase) FindAll(limit, offset int) ([]*models.Questions, helpers.Metadata, error) {
+	qs, meta, err := q.questionsRepository.FindAll(limit, offset)
 	if err != nil {
 		q.logger.Error(err.Error())
-		return nil, err
+		return nil, helpers.Metadata{}, err
 	}
-	return qs, nil
+	return qs, meta, nil
 }
 func (q *questionsUsecase) FindByFile(file *multipart.FileHeader) (*models.Questions, error) {
 	path := helpers.DstNewFile("questions", file.Filename)

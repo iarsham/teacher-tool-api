@@ -7,7 +7,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/config v1.27.18
 	github.com/aws/aws-sdk-go-v2/service/s3 v1.55.1
 	github.com/golang-jwt/jwt/v5 v5.2.1
-	github.com/iarsham/bindme v0.5.0
+	github.com/iarsham/bindme v0.8.0
 	github.com/iarsham/multiplexer v1.1.1
 	github.com/lib/pq v1.10.9
 	github.com/rs/cors v1.11.0

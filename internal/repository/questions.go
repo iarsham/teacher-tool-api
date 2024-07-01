@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"github.com/iarsham/teacher-tool-api/internal/domain"
 	"github.com/iarsham/teacher-tool-api/internal/entities"
+	"github.com/iarsham/teacher-tool-api/internal/helpers"
 	"github.com/iarsham/teacher-tool-api/internal/models"
 	"time"
 )
@@ -19,16 +20,19 @@ func NewQuestionRepository(db *sql.DB) domain.QuestionsRepository {
 	}
 }
 
-func (q *questionsRepository) FindAll() ([]*models.Questions, error) {
-	query := `SELECT * FROM questions`
+func (q *questionsRepository) FindAll(limit, offset int) ([]*models.Questions, helpers.Metadata, error) {
+	var totalRecords int
+	query := `SELECT COUNT(*) OVER(),* FROM questions
+			  ORDER BY id		
+			  LIMIT $1 OFFSET $2`
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
-	rows, err := q.db.QueryContext(ctx, query)
+	rows, err := q.db.QueryContext(ctx, query, limit, offset)
 	if err != nil {
-		return nil, err
+		return nil, helpers.Metadata{}, err
 	}
 	defer rows.Close()
-	return collectQuestionsRows(rows)
+	return collectQuestionsRows(rows, totalRecords, limit, offset)
 }
 
 func (q *questionsRepository) FindByFile(link string) (*models.Questions, error) {
@@ -75,11 +79,12 @@ func collectQuestionRow(row *sql.Row) (*models.Questions, error) {
 	return &question, err
 }
 
-func collectQuestionsRows(rows *sql.Rows) ([]*models.Questions, error) {
+func collectQuestionsRows(rows *sql.Rows, totalRecords int, limit, offset int) ([]*models.Questions, helpers.Metadata, error) {
 	var questions []*models.Questions
 	for rows.Next() {
 		var question models.Questions
 		err := rows.Scan(
+			&totalRecords,
 			&question.ID, &question.Lesson,
 			&question.Title, &question.Grade,
 			&question.Level, &question.Views,
@@ -87,9 +92,10 @@ func collectQuestionsRows(rows *sql.Rows) ([]*models.Questions, error) {
 			&question.UserID, &question.CreatedAt,
 		)
 		if err != nil {
-			return nil, err
+			return nil, helpers.Metadata{}, err
 		}
 		questions = append(questions, &question)
 	}
-	return questions, nil
+	metadata := helpers.CalculateMetadata(totalRecords, offset, limit)
+	return questions, metadata, nil
 }
